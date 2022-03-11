@@ -59,12 +59,18 @@ class YaUploader(Encrypt):
     def check_token(self):
         """Проверяем валидацию токена"""
         if self.ya.check_token(self.token_ya) is not True:
-            raise Exception('Токен недействителен')
+            print('Токен недействителен.')
+            input('Работа скрипта завершена.\n'
+                  'Нажмите любую кнопку для выхода.')
+            exit()
 
     def upload_to_yandex(self):
         """Метод загружает файл на яндекс диск"""
         if len(self.files) == 0:
-            raise Exception('Папка пуста.')
+            print('Папка пуста.')
+            input('Работа скрипта завершена.\n'
+                  'Нажмите любую кнопку для выхода.')
+            exit()
         name_archive = self.encrypt(self.path, self.files)
         self.delete_files()
         self.ya.upload(f'{self.path}/{name_archive}', f'/{name_archive}', overwrite=True)
