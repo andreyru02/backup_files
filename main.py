@@ -78,6 +78,9 @@ def main():
 
     ya_upload = YaUploader(token_ya=config['token_yandex_disk'], path='safe', password=config['archive_password'])
     ya_upload.upload_to_yandex()
+    input('Работа скрипта завершена.\n'
+          'Нажмите любую кнопку для выхода.')
+    exit()
 
 
 if __name__ == '__main__':
