@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-import config
+import json
 import yadisk
 import pyminizip
 
@@ -23,15 +23,19 @@ class Encrypt:
         self.path_to_files.clear()
         for file in files:
             self.path_to_files.append(f'{path}/{file}')
-
-        pyminizip.compress_multiple(
-            self.path_to_files,
-            [],
-            f'{path}/{name}.zip',
-            self.password,
-            5
-        )
-        print(f'Архив {name}.zip создан.')
+        try:
+            pyminizip.compress_multiple(
+                self.path_to_files,
+                [],
+                f'{path}/{name}.zip',
+                self.password,
+                5
+            )
+            print(f'Архив {name}.zip создан.')
+        except OSError:
+            input('Сохранение архива не удалось.\nВозможно вы пытаетесь заархивировать папки.\n'
+                  'Нажмите любую кнопку для выхода.')
+            exit()
 
         return f'{name}.zip'
 
@@ -68,6 +72,13 @@ class YaUploader(Encrypt):
         print(clear_folder(self.path, name_archive))
 
 
-if __name__ == '__main__':
-    ya_upload = YaUploader(token_ya=config.TOKEN_YA_DISK, path='safe', password=config.PASSWORD)
+def main():
+    with open('config.json') as file:
+        config = json.load(file)
+
+    ya_upload = YaUploader(token_ya=config['token_yandex_disk'], path='safe', password=config['archive_password'])
     ya_upload.upload_to_yandex()
+
+
+if __name__ == '__main__':
+    main()
